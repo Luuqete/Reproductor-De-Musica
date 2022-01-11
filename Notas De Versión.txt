@@ -1,0 +1,2 @@
+v1.0: El reproductor solo funcionaba en una ruta C:/users/Usuario/Downloads/Musica y lo unico que hacia era reproducir la musica
+      Frenar y pausar la musica
