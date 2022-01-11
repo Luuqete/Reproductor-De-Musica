@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package v1;
+package v2;
 
 /**
  *
@@ -20,26 +20,30 @@ import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.*;
 
 import java.io.*;
+import javax.swing.JFileChooser;
+import javax.swing.UIManager;
 
 public class MusicaConInterfaz extends javax.swing.JFrame {
 
     /**
      * Creates new form MusicaConInterfaz
      */
-    String Musica[];// = new String[20];
+    String Musica[];
     Player ply;
     String Cancion;
+    int BanderaGuardar = 0;
+    File musica;
+    Pruebitaas Instancia = new Pruebitaas();
     public static boolean bandera = true, Stop = true;
 
     public MusicaConInterfaz() {
         initComponents();
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        /* Musica[0] = "Metallica - Nothing else matters (sub. español).mp3";
-         Musica[1] = "Rusherking, Maria Becerra - ANTES DE TI (Official Video).mp3";
-         Musica[2] = "R.E.M. - Losing My Religion - Subtitulada en español e inglés.mp3";*/
+        setTitle("Reproductor de Música");
+
+        PedirCarpeta();
         LlenarVector();
-       
     }
 
     /**
@@ -53,8 +57,12 @@ public class MusicaConInterfaz extends javax.swing.JFrame {
 
         LabelCancion = new javax.swing.JLabel();
         ComboCanciones = new javax.swing.JComboBox();
-        BotonReproducir = new javax.swing.JButton();
         BotonPausaOPlay = new javax.swing.JButton();
+        BotonReproducirOStop = new javax.swing.JButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -66,19 +74,36 @@ public class MusicaConInterfaz extends javax.swing.JFrame {
             }
         });
 
-        BotonReproducir.setText("Reproducir");
-        BotonReproducir.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BotonReproducirActionPerformed(evt);
-            }
-        });
-
         BotonPausaOPlay.setText("Pausa");
         BotonPausaOPlay.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BotonPausaOPlayActionPerformed(evt);
             }
         });
+
+        BotonReproducirOStop.setText("Reproducir");
+        BotonReproducirOStop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonReproducirOStopActionPerformed(evt);
+            }
+        });
+
+        jMenu1.setText("File");
+
+        jMenuItem1.setText("Eliminar datos");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -87,15 +112,16 @@ public class MusicaConInterfaz extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(108, 108, 108)
-                        .addComponent(BotonReproducir)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(BotonPausaOPlay))
-                    .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(ComboCanciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(LabelCancion))
-                .addGap(0, 156, Short.MAX_VALUE))
+                .addGap(0, 746, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(290, 290, 290)
+                .addComponent(BotonReproducirOStop)
+                .addGap(18, 18, 18)
+                .addComponent(BotonPausaOPlay)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -103,10 +129,10 @@ public class MusicaConInterfaz extends javax.swing.JFrame {
                 .addComponent(LabelCancion)
                 .addGap(33, 33, 33)
                 .addComponent(ComboCanciones, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(BotonReproducir)
-                    .addComponent(BotonPausaOPlay)))
+                    .addComponent(BotonPausaOPlay)
+                    .addComponent(BotonReproducirOStop)))
         );
 
         pack();
@@ -128,25 +154,6 @@ public class MusicaConInterfaz extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_ComboCancionesActionPerformed
     int BanderaInt = 0;
-    private void BotonReproducirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonReproducirActionPerformed
-        Pruebitaas p = new Pruebitaas();
-        if (BanderaInt == 0) {
-
-            //LabelCancion.setText("Canción: ");
-            p.Sonar(Cancion);
-            p.start();
-            bandera = true;
-            Stop = true;
-            BanderaInt++;
-            BotonReproducir.setText("Stop");
-        } else {
-            BanderaInt = 0;
-            BotonReproducir.setText("Reproducir");
-            parar();
-        }
-
-    }//GEN-LAST:event_BotonReproducirActionPerformed
-
     private void BotonPausaOPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonPausaOPlayActionPerformed
         if (bandera == true) {
             bandera = false;
@@ -156,6 +163,40 @@ public class MusicaConInterfaz extends javax.swing.JFrame {
             BotonPausaOPlay.setText("Pausa");
         }
     }//GEN-LAST:event_BotonPausaOPlayActionPerformed
+
+    private void BotonReproducirOStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonReproducirOStopActionPerformed
+
+        Pruebitaas p = new Pruebitaas();
+        if (BanderaInt == 0) {
+
+            p.Sonar(Cancion, musica.getAbsolutePath());
+            p.start();
+            bandera = true;
+            Stop = true;
+            BanderaInt++;
+            BotonReproducirOStop.setText("Stop");
+        } else {
+            BanderaInt = 0;
+            BotonReproducirOStop.setText("Reproducir");
+            parar();
+        }
+
+
+    }//GEN-LAST:event_BotonReproducirOStopActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+
+        File ArchivoGuardado = new File("C:\\Reproductor\\Carpeta.ddr");
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ArchivoGuardado))) {
+            oos.writeBytes("");
+        } catch (Exception e) {
+            System.err.println("Error en la Escritura del archivo de creado Localizacion: metodo GuardarRuta() " + e);
+        }
+        
+        JOptionPane.showMessageDialog(null, "Datos Eliminados");
+        System.exit(0);
+
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -169,7 +210,7 @@ public class MusicaConInterfaz extends javax.swing.JFrame {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    javax.swing.UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                     break;
                 }
             }
@@ -186,6 +227,18 @@ public class MusicaConInterfaz extends javax.swing.JFrame {
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -197,9 +250,13 @@ public class MusicaConInterfaz extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotonPausaOPlay;
-    private javax.swing.JButton BotonReproducir;
+    javax.swing.JButton BotonReproducirOStop;
     private javax.swing.JComboBox ComboCanciones;
     private javax.swing.JLabel LabelCancion;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     // End of variables declaration//GEN-END:variables
 
     void LlenarBox() {
@@ -210,7 +267,7 @@ public class MusicaConInterfaz extends javax.swing.JFrame {
     }
 
     void LlenarVector() {
-        File musica = new File("C:\\Users\\fvg\\Downloads\\Musica");
+
         FilenameFilter Filtro = new FilenameFilter() {
 
             @Override
@@ -235,7 +292,129 @@ public class MusicaConInterfaz extends javax.swing.JFrame {
         BanderaInt = 0;
         Pruebitaas p = new Pruebitaas();
         p.stop();
-    }                     //con estado me refuero a donde esta
-  
-}
+    }
 
+    private void Crear() {
+        File CarpetaDatos = new File("C:\\Reproductor");
+        File ArchivoGuardado = new File("C:\\Reproductor\\Carpeta.ddr");
+        boolean Creado = false;
+        while (!Creado) {
+            if (CarpetaDatos.exists()) {
+                if (ArchivoGuardado.exists()) {
+                    Creado = true;
+
+                } else {
+                    try {
+                        ArchivoGuardado.createNewFile();
+
+                    } catch (Exception e) {
+                        System.err.println("Error Creando el archivo Localizacion: metodo Crear() " + e);
+                    }
+                }
+            } else {
+                CarpetaDatos.mkdir();
+            }
+
+        }
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ArchivoGuardado))) {
+            oos.writeBytes("");
+        } catch (Exception e) {
+            System.err.println("Error en la Escritura del archivo de creado Localizacion: metodo Crear() " + e);
+        }
+    }
+
+    private void PedirCarpeta() {
+
+        File ArchivoGuardado = new File("C:\\Reproductor\\Carpeta.ddr");
+        if (!ArchivoGuardado.exists()) {
+            Crear();
+            PedirCarpeta();
+        } else {
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ArchivoGuardado))) {
+                int Lector = ois.read();
+                //System.out.println(Lector);
+                String Ruta = "";
+                if (Lector != -1) {
+                   // System.out.println("Prueva");
+                    int Caracter = 0;
+                    do {
+                        Caracter = ois.read();
+                        if (Caracter != -1) {
+
+                            Ruta = Ruta + (char) Caracter;
+                        }
+                    } while (Caracter != -1);
+                    musica = new File(Ruta);;
+                } else {
+                    File CarpetaMusica;
+                    try {
+                        JOptionPane.showMessageDialog(null, "Ahora Seleccione Una carpeta");
+                        JFileChooser Jfc = new JFileChooser();
+                        Jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                        int i = Jfc.showOpenDialog(this);
+                        if (i == JFileChooser.APPROVE_OPTION) {
+                            CarpetaMusica = Jfc.getSelectedFile();
+                            //System.out.println(CarpetaMusica.getAbsolutePath());
+                            try {
+                                String Opciones[] = new String[2];
+                                Opciones[0] = "Solo una vez";
+                                Opciones[1] = "Siempre";
+                                int Seleccion = JOptionPane.showOptionDialog(this, "Esta Carpeta La usaras", "Eleccion", 0, JOptionPane.QUESTION_MESSAGE, null, Opciones, null);
+                                //System.out.println(Seleccion);
+                                if (Seleccion == 0) {
+                                    musica = new File(CarpetaMusica.getAbsolutePath());
+                                } else if (Seleccion == 1) {
+                                    musica = new File(CarpetaMusica.getAbsolutePath());
+                                    GuardarRuta(CarpetaMusica.getAbsolutePath());
+                                    
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Error Inesperado");
+                                    System.exit(0);
+                                }
+                            } catch (Exception e) {
+                                System.err.println("Error en el metodo PedirCarpeta() " + e);
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error");
+                            System.exit(0);
+                        }
+                    } catch (Exception e) {
+                        System.err.println("Error Pidiendo la carpeta Localizacion: metodo PedirCarpeta() " + e);
+                    }
+                }
+
+            } catch (Exception e) {
+                System.err.println("Error leyendo el archivo de guardado localizacion: metodo PedirCarpeta() " + e);
+            }
+
+        }
+
+    }
+
+    private void GuardarRuta(String Ruta) {
+        File ArchivoGuardado = new File("C:\\Reproductor\\Carpeta.ddr");
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ArchivoGuardado))) {
+            oos.writeBytes("X" + Ruta);
+        } catch (Exception e) {
+            System.err.println("Error en la Escritura del archivo de creado Localizacion: metodo GuardarRuta() " + e);
+        }
+    }
+    
+    
+    public void BotonDeStop(){
+        Pruebitaas p = new Pruebitaas();
+        if (BanderaInt == 0) {
+
+            p.Sonar(Cancion, musica.getAbsolutePath());
+            p.start();
+            bandera = true;
+            Stop = true;
+            BanderaInt++;
+            BotonReproducirOStop.setText("Stop");
+        } else {
+            BanderaInt = 0;
+            BotonReproducirOStop.setText("Reproducir");
+            parar();
+        }
+    }
+}

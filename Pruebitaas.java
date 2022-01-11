@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package v1;
+package v2;
 
 import sonidopapa.*;
 import java.io.FileInputStream;
@@ -20,12 +20,13 @@ public class Pruebitaas extends Thread {
     String Cancion;
     public Player ply;
     public boolean banderas, stop;
-    MusicaConInterfaz m = new MusicaConInterfaz();
+    
     
 
-    public void Sonar(String Cancion) {
-        this.Cancion = Cancion;
+    public void Sonar(String Cancion, String Ruta) {
+        this.Cancion = Ruta + "\\" + Cancion;
         banderas = true;
+        //System.err.println(this.Cancion);
     }
 
     @Override
@@ -33,14 +34,17 @@ public class Pruebitaas extends Thread {
 
         try {
             stop = MusicaConInterfaz.Stop;
-            ply = new Player(new FileInputStream("C:\\Users\\fvg\\Downloads\\Musica\\" + Cancion));
+            ply = new Player(new FileInputStream(Cancion));
             while (stop) {
                  banderas = MusicaConInterfaz.bandera;
                 while (banderas) {                    
                     ply.play(10);
-                    
+                   
                     //System.out.println("Aaá");
                     banderas = MusicaConInterfaz.bandera;
+                    if(ply.isComplete() == true){
+                      
+                    }
                 }
                  System.err.print("");
                 stop = MusicaConInterfaz.Stop;
