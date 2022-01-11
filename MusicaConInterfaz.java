@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package v4;
+package v5;
 
 /**
  *
@@ -144,14 +144,14 @@ public class MusicaConInterfaz extends javax.swing.JFrame implements Serializabl
             Cancion = ComboCanciones.getSelectedItem().toString();
             if (Cancion.equals("") || Cancion.equals(" ") || Cancion.equals("  ") || Cancion.equals("   ")) {
                 LabelCancion.setText("Canción: ");
-            } 
+            }
         } catch (Exception ex) {
             System.err.print("Error en el metodo del JComboBox " + ex);
         }
     }//GEN-LAST:event_ComboCancionesActionPerformed
 //Metodo del boton de pausa
     private void BotonPausaOPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonPausaOPlayActionPerformed
-      // Si Pausa es true, pasala a false y viseversa
+        // Si Pausa es true, pasala a false y viseversa
         if (Pausa == true) {
             Pausa = false;
             BotonPausaOPlay.setText("Play");
@@ -163,45 +163,45 @@ public class MusicaConInterfaz extends javax.swing.JFrame implements Serializabl
 //MEtodo del boton de reproducir y Stop
     private void BotonReproducirOStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonReproducirOStopActionPerformed
         String Ruta;
-        Pruebitaas p = new Pruebitaas();
-      //Si BanderaInt == 0 se reproduce la canción en cambio si es mas de 0 se para la canción
+        HiloReproductor p = new HiloReproductor();
+        //Si BanderaInt == 0 se reproduce la canción en cambio si es mas de 0 se para la canción
         if (BanderaInt == 0) {
             // System.out.println(musica.getAbsolutePath());
             LabelCancion.setText("Reproduciendo: " + Cancion);
-          //Si no hay datos guardados se ejecuta este metodo
+            //Si no hay datos guardados se ejecuta este metodo
             if (PedirCarpetaOmusica == true) {
                 Ruta = ObtenerRuta(ComboCanciones.getSelectedItem().toString());
-            //En cambio si hay datos guardados se extrae la ruta de musica    
+                //En cambio si hay datos guardados se extrae la ruta de musica    
             } else {
                 Ruta = musica.getAbsolutePath();
             }
             //System.out.println(Ruta);
-          //Metodo del Hilo para obtener la cancion y la ruta para reproducir la cancion
+            //Metodo del Hilo para obtener la cancion y la ruta para reproducir la cancion
             p.Sonar(Cancion, Ruta);
-          //Inicia el Hilo 
+            //Inicia el Hilo 
             p.start();
-          //Las variables de pausa y stop se vuelven true
+            //Las variables de pausa y stop se vuelven true
             Pausa = true;
             Stop = true;
-          //Y aumenta esta variable para que la proxima vez que se ejecute se pare la canción
+            //Y aumenta esta variable para que la proxima vez que se ejecute se pare la canción
             BanderaInt++;
             getBotonReproducirOStop().setText("Stop");
         } else {
-          //Aca se le devuelve el valor 0 a esta variable para que en la proxima ejecute la de arriba
+            //Aca se le devuelve el valor 0 a esta variable para que en la proxima ejecute la de arriba
             BanderaInt = 0;
             getBotonReproducirOStop().setText("Reproducir");
-          //Y se ejecuta este metodo
+            //Y se ejecuta este metodo
             parar();
         }
 
 
     }//GEN-LAST:event_BotonReproducirOStopActionPerformed
- //Este JMenuItem elimina los datos guardados
+    //Este JMenuItem elimina los datos guardados
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-       //Variable con la localización del archivo de guardado
+        //Variable con la localización del archivo de guardado
         File ArchivoGuardado = new File("C:\\Reproductor\\Carpeta.ddr");
-      /*Vasicamente lo que hace es escribir el archivo pero no le manda ningun valor asi cuando se pide su 
-        contenido returne un -1 y se ejecute la parte en la que se pide una carpeta*/
+        /*Vasicamente lo que hace es escribir el archivo pero no le manda ningun valor asi cuando se pide su 
+         contenido returne un -1 y se ejecute la parte en la que se pide una carpeta*/
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ArchivoGuardado))) {
             oos.writeBytes("");
         } catch (Exception e) {
@@ -260,57 +260,68 @@ public class MusicaConInterfaz extends javax.swing.JFrame implements Serializabl
     private javax.swing.JMenuItem jMenuItem1;
     // End of variables declaration//GEN-END:variables
 //Metodo para llenar el JComboBox
+
     void LlenarBox() {
-      //Añade un item vacio para mejor visual
+        //Añade un item vacio para mejor visual
         ComboCanciones.addItem("  ");
-      //Recorre todo el vectory añade las canciones
+        //Recorre todo el vectory añade las canciones
         for (String i : Musica) {
             ComboCanciones.addItem(i);
         }
     }
 //Metodo para llenar el vector para llenar el box en caso de que halla datos guardados
+
     void LlenarVector() {
-       //Filtro para que solo se listen los archivos .mp3
+        //Filtro para que solo se listen los archivos .mp3
         FilenameFilter Filtro = (File dir, String name1) -> name1.endsWith(".mp3");
-      //Llena el vector 
+        //Llena el vector 
         Musica = musica.list(Filtro);
-      //Ordena alfabéticamente el vector
+        //Ordena alfabéticamente el vector
         Arrays.sort(Musica);
-      //Ejecuta el metodo para llenar el JComboBox
+        //Ejecuta el metodo para llenar el JComboBox
         LlenarBox();
         //  System.out.println(musica.getAbsolutePath());
     }
 //Metodo para llenar el vector para llenar el box en caso de que no halla datos guardados
+
     void LlenarVector(File Canciones[]) {
 //Lo mismo que el otro LlenarVector(), solo que este recive como parametro un vector para recorrerlo
 // Y llenar el box
+        //Filtro para obterer solo los archivos .mp3
         FilenameFilter Filtro = (File dir, String name1) -> name1.endsWith(".mp3");
+       //Vector que contiene las carpetas 
         File VectorArchivos[] = Canciones;
-       //Es un bucle que recorre el vector que se recive como parametro y llena el box 
+        
+        //Es un bucle que recorre el vector que se recive como parametro y llena el box 
         for (File i : VectorArchivos) {
+            //llena el vector para Llenar el JComboBox
             Musica = i.list(Filtro);
-            
+           //ordena alfabéticamente el vector
             Arrays.sort(Musica);
+            //Llena el box
             LlenarBox();
-            
+
         }
-       
+        
+
     }
 //metodo para darle stop
+
     void parar() {
-      //Se pasan las banderas a false
+        //Se pasan las banderas a false
         Pausa = false;
         Stop = false;
-      //Se cambia esta bandera a 0(Si, se que la cambio en el mismo metodo pero para asegurar)
+        //Se cambia esta bandera a 0(Si, se que la cambio en el mismo metodo pero para asegurar)
         BanderaInt = 0;
-      //Instancia con el hilo
-        Pruebitaas p = new Pruebitaas();
-      //Metodo para matar el Hilo
+        //Instancia con el hilo
+        HiloReproductor p = new HiloReproductor();
+        //Metodo para matar el Hilo
         p.stop();
     }
 //Metodo para crear el carchivo y la carpeta donde se guardarán los datos
+
     private void Crear() {
-      //Crea las variables con la ruta de donde se guardaran 
+        //Crea las variables con la ruta de donde se guardaran 
         File CarpetaDatos = new File("C:\\Reproductor");
         File ArchivoGuardado = new File("C:\\Reproductor\\Carpeta.ddr");
         //Variable para saber cuando deve parar el while
@@ -335,14 +346,15 @@ public class MusicaConInterfaz extends javax.swing.JFrame implements Serializabl
             }
 
         }
-      //Y aparte lo escribe con nada asi salta -1 y pide la carpeta
+        //Y aparte lo escribe con nada asi salta -1 y pide la carpeta
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ArchivoGuardado))) {
             oos.writeBytes("");
         } catch (Exception e) {
             System.err.println("Error en la Escritura del archivo de creado Localizacion: metodo Crear() " + e);
         }
     }
-  //Metodo donde se decide si pedir carpeta, seleccionar la/s carpeta/s y si se guarda o no
+
+    //Metodo donde se decide si pedir carpeta, seleccionar la/s carpeta/s y si se guarda o no
     private void PedirCarpeta() {
         //Variable con el archivo de guardad0
         File ArchivoGuardado = new File("C:\\Reproductor\\Carpeta.ddr");
@@ -350,87 +362,108 @@ public class MusicaConInterfaz extends javax.swing.JFrame implements Serializabl
         if (!ArchivoGuardado.exists()) {
             Crear();
             PedirCarpeta();
-            
+
         } else {
             //try para leer el archivo de guardado
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ArchivoGuardado))) {
-                  //Variable que lee El primer caractera ver si lee el archivo o no
+                //File reader para leer las lineas
+                FileReader fr = new FileReader(ArchivoGuardado);
+               //BufferedReader para leer las lineas
+                BufferedReader bf = new BufferedReader(fr);
+                
+                //System.err.println(bf.lines().count());
+                //Variable que lee El primer caractera ver si lee el archivo o no
                 int Lector = ois.read();
+               //Variable con la cantidad de lineas del archivo de guardado
+                long lineas = bf.lines().count();
+                 
                 //System.out.println(Lector);
-              //Variable que almacena la ruta de la carpeta guardada
+                //Variable que almacena la ruta de la carpeta guardada
                 String Ruta = "";
+                
                 //Si el archivo no esta vacio, lo lee
                 if (Lector != -1) {
-                    
-                    // System.out.println("Prueva");
-                      //Variable que almacena todos los caracteres
-                    int Caracter = 0;
-                    //Bucle para leer el archivo
-                    do {
-                        Caracter = ois.read();
-                        if (Caracter != -1) {
+                    //Si lineas es mayor a 1, quiere decir que haymas de una carpeta, entond¿ces ejecuta ese metdo
+                    if (lineas > 1) {
+                      //Le pasa como parametro las lineas del archivo
+                      LeerVariasLineas((int) lineas);
+                      
+                    } else {
 
-                            Ruta = Ruta + (char) Caracter;
-                        }
-                    } while (Caracter != -1);
-                  //Inicializa la variable con la ruta guardada
-                    musica = new File(Ruta);
-                  //Cambia esta variable a false para que al reproducir, sepa de donde sacar la ruta
-                    PedirCarpetaOmusica = false;
-                    //Y llena el vector
-                    LlenarVector();
-                 //En cambio si el archivo esta vacio pide carpeta   
+                    // System.out.println("Prueva");
+                        //Variable que almacena todos los caracteres
+                        int Caracter = 0;
+                        //Bucle para leer el archivo
+                        do {
+                            Caracter = ois.read();
+                            if (Caracter != -1) {
+
+                                Ruta = Ruta + (char) Caracter;
+                            }
+                        } while (Caracter != -1);
+                        //Inicializa la variable con la ruta guardada
+                        musica = new File(Ruta);
+                        //Cambia esta variable a false para que al reproducir, sepa de donde sacar la ruta
+                        PedirCarpetaOmusica = false;
+                        //Y llena el vector
+                        LlenarVector();
+                        //En cambio si el archivo esta vacio pide carpeta   
+                    }
                 } else {
 
                     try {
-                      //Mensaje que indica al usuario que se debe escojer una ruta
+                        //Mensaje que indica al usuario que se debe escojer una ruta
                         JOptionPane.showMessageDialog(null, "Ahora Seleccione Una carpeta");
-                      //Componente para escojer la carpeta
+                        //Componente para escojer la carpeta
                         JFileChooser Jfc = new JFileChooser();
-                      //Le indica al Jfc que solo debe elejir carpetas
+                        //Le indica al Jfc que solo debe elejir carpetas
                         Jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                      //Le indica al Jfc que puede elejir mas de una carpeta
+                        //Le indica al Jfc que puede elejir mas de una carpeta
                         Jfc.setMultiSelectionEnabled(true);
-                      //Y abre la ventana para elejir archivo
+                        //Y abre la ventana para elejir archivo
                         int i = Jfc.showOpenDialog(this);
-                      //Si se elijio un archivo correctamente
+                        //Si se elijio un archivo correctamente
                         if (i == JFileChooser.APPROVE_OPTION) {
-                          //Le indica a este vector los archivos que se elijieron
+                            //Le indica a este vector los archivos que se elijieron
                             CarpetaMusica = Jfc.getSelectedFiles();
-                          
+
                             try {
-                              //Variable para saber que elijio el usuario, si guardar o no guardar
+                                //Variable para saber que elijio el usuario, si guardar o no guardar
                                 int Seleccion = 0;
-                              //Si se eliiio una sola carpeta
-                                if (CarpetaMusica.length == 1) {
-                                    //vector para pasarle al jopane las opciones
-                                    String Opciones[] = new String[2];
-                                    Opciones[0] = "Solo una vez";
-                                    Opciones[1] = "Siempre";
-                                  //abre el option dialog
-                                    Seleccion = JOptionPane.showOptionDialog(this, "Esta Carpeta La usaras", "Eleccion", 0, JOptionPane.QUESTION_MESSAGE, null, Opciones, null);
+                                
+
+                                //vector para pasarle al jopane las opciones
+                                String Opciones[] = new String[2];
+                                Opciones[0] = "Solo una vez";
+                                Opciones[1] = "Siempre";
+                                //abre el option dialog
+                                Seleccion = JOptionPane.showOptionDialog(this, "Esta Carpeta La usaras", "Eleccion", 0, JOptionPane.QUESTION_MESSAGE, null, Opciones, null);
                                     //System.out.println(Seleccion);
-                                }
-                              //Si seleccion es 0 (Puede ser porque hay mas de una carpeta seleccionada
-                                // o porque el usuario no quiso guardar la carpeta)
+
+                                //Si seleccion es 0, porque el usuario decidio no guardar
+                                
                                 if (Seleccion == 0) {
                                     //ejecuta el metodo LlenarVector(Y le pasa como parametro las carpetas seleccionadas)
                                     LlenarVector(CarpetaMusica);
-                                  //Y cambia esta variable a true para que sepa de donde sacar la ruta
+                                    //Y cambia esta variable a true para que sepa de donde sacar la ruta
                                     PedirCarpetaOmusica = true;
-                                //Si seleccion es 1 y ademas hay una carpeta seleccionada   
+                                    //Si seleccion es 1(Porque el usuario decidio guardar) y ademas hay una carpeta seleccionada   
                                 } else if (Seleccion == 1 && CarpetaMusica.length == 1) {
-                                  //inicializa el archivo con el primer y unica valor del Vector
+                                    //inicializa el archivo con el primer y unica valor del Vector
                                     musica = new File(CarpetaMusica[0].getAbsolutePath());
-                                  //guarda la ruta
+                                    //guarda la ruta
                                     GuardarRuta(CarpetaMusica[0].getAbsolutePath());
                                     PedirCarpetaOmusica = true;
                                     LlenarVector();
-                                //Se que esto no se ejecutara pero mejor prevenir q lamentar
+                                    //Si se quiere guardar mas de una carpeta
                                 } else if (Seleccion == 1 && CarpetaMusica.length > 1) {
-                                    JOptionPane.showMessageDialog(null, "Error, no se puede guardar mas de una carpeta");
+                                    //Llena el vector
                                     LlenarVector(CarpetaMusica);
-                                 //Por las dudas y hay un error
+                                    //Guarda todas las rutas
+                                    GuardarRutas(CarpetaMusica);
+                                    //Y para que use el metodo y no la variable
+                                    PedirCarpetaOmusica = true;
+                                    //Por las dudas y hay un error
                                 } else {
                                     JOptionPane.showMessageDialog(null, "Error Inesperado");
                                     System.exit(0);
@@ -454,26 +487,87 @@ public class MusicaConInterfaz extends javax.swing.JFrame implements Serializabl
         }
 
     }
-   //Metodo para guardar la ruta de la carpeta, la cual recive como parametro
+    //Metodo para leer el archivo de guardado cuando hay mas de una carpeta guardada
+    private void LeerVariasLineas(int lineas){
+        //Vector en donde se guardarán las carpetas, el tamaño de este es el numero de lineas que se recive como parametro
+        File RutasGuardadas[] = new File[lineas];
+        //Vaariable que almacena un caracter en ascii para despues en la cadena completar la ruta 
+        int caracter = 0;
+        //Variable que va almacenando caracteres y los comblerte en la ruta
+        String total = "";
+        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream("C:\\Reproductor\\Carpeta.ddr"))) {
+            //For donde va cambiando la posición del vector conforme se llena
+            for (int i = 0; i < RutasGuardadas.length; i++) {
+                //do-while que llena la ruta y cuando ya esta lista lo rompe
+                do {                    
+                    //Agarramos un caracter
+                    caracter = ois.read();
+                    //Si es un salto de linea, romte el do-while
+                    if((char) caracter == '\n'){
+                        break;
+                      //Si es diferente de -1 a la cadena total le añade el caracter parceado en char
+                    } else if(caracter != -1){
+                        total += (char) caracter;
+                    }
+                } while (caracter != -1);
+       
+                //Guarda la ruta en la posición correspondiente
+                RutasGuardadas[i] = new File(total);
+         
+                //Limpia la variable para llenarla nuevamente
+                total = "";
+            }
+            
+            //Llena el vector para llenar el JComboBox y lepasa como parametro elvector que llenamos anteriormente
+            LlenarVector(RutasGuardadas);
+        
+            //Carpeta musica la iguala con el vector que llenamos para que no halla errores
+            CarpetaMusica = RutasGuardadas;
+            //Le da a  este booleano un valor true para que use el metodo pedir carpeta
+            PedirCarpetaOmusica = true;
+        } catch (Exception e) {
+            System.err.println("Error leyendo varias rutas " + e);
+        }
+    }
+
+    //Metodo para guardar la ruta de la carpeta, la cual recive como parametro
     private void GuardarRuta(String Ruta) {
         File ArchivoGuardado = new File("C:\\Reproductor\\Carpeta.ddr");
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ArchivoGuardado))) {
             oos.writeBytes("X" + Ruta);
         } catch (Exception e) {
-            System.err.println("Error en la Escritura del archivo de creado Localizacion: metodo GuardarRuta() " + e);
+            System.err.println("Error en la Escritura del archivo de guardado Localizacion: metodo GuardarRuta() " + e);
         }
     }
+   //Metodo para guardar varias rutas, recive como parametro un vector con las rutas
+    private void GuardarRutas(File Rutas[]) {
+        File ArchivoGuardado = new File("C:\\Reproductor\\Carpeta.ddr");
+        //variable que almacena todas las rutas mas un salto de linea
+        String Guardar = "";
+        //for que recorre todas las posiciónes y las guarda en la variable
+        for (File i : Rutas) {
+            
+            Guardar +=  i.getAbsolutePath() + "\n";
+        }
+        //Guarda la variable 
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ArchivoGuardado))) {
+                oos.writeBytes(Guardar);
+            } catch (Exception e) {
+                System.err.println("Error en la Escritura del archivo de guardado Localizacion: metodo GuardarRutas() " + e);
+            }
+    }
+
     //Metodo para ocalizar la ruta la cancion, basicamente recorre todo el vectro de carpetas, agarra
     //1 por 1, enlista los archvos y los compara 1 por 1 y si el nombre coincide, retorna la ruta
-    String ObtenerRuta(String Index) {
+    String ObtenerRuta(String Cancion) {
         boolean NoRepetidas = true;
         FilenameFilter Filtro = (File dir, String name1) -> name1.endsWith(".mp3");
         File j[], comodin;
-        for (int i = 0; i < CarpetaMusica.length; i++) {
-            comodin = CarpetaMusica[i];
+        for (File CarpetaMusica1 : CarpetaMusica) {
+            comodin = CarpetaMusica1;
             j = comodin.listFiles();
             for (File k : j) {
-                if (k.getName().equals(Index) && NoRepetidas == true) {
+                if (k.getName().equals(Cancion) && NoRepetidas == true) {
                     NoRepetidas = false;
                     return comodin.getAbsolutePath();
 
@@ -481,7 +575,7 @@ public class MusicaConInterfaz extends javax.swing.JFrame implements Serializabl
 
             }
         }
-        return "0";
+        return "Error, esto no deveria de aparecer";
 
     }
 

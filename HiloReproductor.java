@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package v4;
+package v5;
 
 import sonidopapa.*;
 import java.io.FileInputStream;
@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.*;
 
-public class Pruebitaas extends Thread {
+public class HiloReproductor extends Thread {
 
     String Cancion;
     public Player ply;
