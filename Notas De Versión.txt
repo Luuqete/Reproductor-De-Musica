@@ -2,3 +2,4 @@ v1.0: El reproductor solo funcionaba en una ruta C:/users/Usuario/Downloads/Musi
       Frenar y pausar la musica. La clase pruvitaas es el hilo donde se reproduce la musica
 v2.0: Ahora el reproductor tedeja elegir la carpeta en la que vas a escuchar musica y te deja guardar la carpeta para escucharla nuevamente
 v3.0: Ahora el reproductor cambia automaticamente el boton de "Stop" a "Rerpoducir"
+v4.0: Ahora el reproductor te deja elegir mas de una carpeta para escuchar música pero solo podes guardar una

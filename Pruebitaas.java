@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package v3;
+package v4;
 
 import sonidopapa.*;
 import java.io.FileInputStream;
@@ -35,12 +35,12 @@ public class Pruebitaas extends Thread {
             stop = MusicaConInterfaz.Stop;
             ply = new Player(new FileInputStream(Cancion));
             while (stop) {
-                banderas = MusicaConInterfaz.bandera;
+                banderas = MusicaConInterfaz.Pausa;
                 while (banderas) {
                     ply.play(10);
 
                     //System.out.println("Aaá");
-                    banderas = MusicaConInterfaz.bandera;
+                    banderas = MusicaConInterfaz.Pausa;
                     if (ply.isComplete() == true && MusicaConInterfaz.getBotonReproducirOStop().getText().equals("Stop")) {
                         MusicaConInterfaz.setBotonReproducirOStop("Reproducir");
                         MusicaConInterfaz.BanderaInt = 0;
@@ -54,7 +54,7 @@ public class Pruebitaas extends Thread {
             }
 
         } catch (JavaLayerException | FileNotFoundException ex) {
-            System.err.print("Error en la " + ex);
+            System.err.print("Error en el Hilo " + ex);
         }
 
     }
