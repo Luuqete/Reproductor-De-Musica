@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package v2;
+package v3;
 
 /**
  *
@@ -18,12 +18,13 @@ import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.*;
+import java.util.Arrays;
 
 import java.io.*;
 import javax.swing.JFileChooser;
 import javax.swing.UIManager;
 
-public class MusicaConInterfaz extends javax.swing.JFrame {
+public class MusicaConInterfaz extends javax.swing.JFrame implements Serializable{
 
     /**
      * Creates new form MusicaConInterfaz
@@ -34,6 +35,7 @@ public class MusicaConInterfaz extends javax.swing.JFrame {
     int BanderaGuardar = 0;
     File musica;
     Pruebitaas Instancia = new Pruebitaas();
+    static int BanderaInt = 0;
     public static boolean bandera = true, Stop = true;
 
     public MusicaConInterfaz() {
@@ -153,7 +155,7 @@ public class MusicaConInterfaz extends javax.swing.JFrame {
             System.err.print(ex);
         }
     }//GEN-LAST:event_ComboCancionesActionPerformed
-    int BanderaInt = 0;
+    
     private void BotonPausaOPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonPausaOPlayActionPerformed
         if (bandera == true) {
             bandera = false;
@@ -174,10 +176,10 @@ public class MusicaConInterfaz extends javax.swing.JFrame {
             bandera = true;
             Stop = true;
             BanderaInt++;
-            BotonReproducirOStop.setText("Stop");
+            getBotonReproducirOStop().setText("Stop");
         } else {
             BanderaInt = 0;
-            BotonReproducirOStop.setText("Reproducir");
+            getBotonReproducirOStop().setText("Reproducir");
             parar();
         }
 
@@ -225,21 +227,7 @@ public class MusicaConInterfaz extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
+       
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -250,7 +238,7 @@ public class MusicaConInterfaz extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotonPausaOPlay;
-    javax.swing.JButton BotonReproducirOStop;
+    static javax.swing.JButton BotonReproducirOStop;
     private javax.swing.JComboBox ComboCanciones;
     private javax.swing.JLabel LabelCancion;
     private javax.swing.JMenu jMenu1;
@@ -282,6 +270,7 @@ public class MusicaConInterfaz extends javax.swing.JFrame {
 
         String VectorMusica[] = musica.list(Filtro);
         Musica = VectorMusica;
+        Arrays.sort(Musica);
         LlenarBox();
         //  System.out.println(musica.getAbsolutePath());
     }
@@ -410,11 +399,25 @@ public class MusicaConInterfaz extends javax.swing.JFrame {
             bandera = true;
             Stop = true;
             BanderaInt++;
-            BotonReproducirOStop.setText("Stop");
         } else {
             BanderaInt = 0;
-            BotonReproducirOStop.setText("Reproducir");
+            BanderaInt = 0;
+            getBotonReproducirOStop().setText("Reproducir");
             parar();
         }
+    }
+
+    /**
+     * @return the BotonReproducirOStop
+     */
+    public static javax.swing.JButton getBotonReproducirOStop() {
+        return BotonReproducirOStop;
+    }
+
+    /**
+     * @param BotonReproducirOStop the BotonReproducirOStop to set
+     */
+    public static void setBotonReproducirOStop(String BotonReproducirOStop) {
+        MusicaConInterfaz.BotonReproducirOStop.setText(BotonReproducirOStop);
     }
 }
